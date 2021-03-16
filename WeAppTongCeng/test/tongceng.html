@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>同层渲染测试</title>
+
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+
+        body {
+            background-color: #EEEEEE;
+            -moz-user-select: none;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        .container {
+            margin: 30px auto;
+            font-size: 25px;
+            background-color: #00FF00;
+            /* insert WKChildView in WKWebView */
+            overflow: scroll;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .bottomBar {
+            width: 500px;
+            height: 500px;
+            background-color: #00FFFF;
+        }
+    </style>
+
+</head>
+
+
+<body>
+    <div class="container cid_1" data-component-type="input" style="width: 200px; height: 40px">
+        <div style="width: 101%; height: 101%">&nbsp;</div>
+    </div>
+    <div class="container cid_2" data-component-type="textArea" style="width: 200px; height: 80px">
+        <div style="width: 101%; height: 101%">&nbsp;</div>
+    </div>
+    <div class="container cid_3" data-component-type="video" style="width: 300px; height: 200px">
+        <div style="width: 101%; height: 101%">&nbsp;</div>
+    </div>
+    <div class="bottomBar" data-component-type="video" style="background-color: #CCCCCC; width: 100%; height: 500px;">more content</div>
+</body>
+
+<script>
+    function insertNativeComponents() {
+        var containers = document.getElementsByClassName("container");
+        console.log(containers);
+        for (var i = 0; i < containers.length; i++) {
+            var ct = containers[i];
+            var component_type = ct.getAttribute("data-component-type");
+            if (!component_type) continue;
+            var cid = ct.getAttribute("class").split(" ")[1];
+            var cid_num = cid.slice("cid_".length);
+            var frame = ct.getBoundingClientRect();
+            var args = {
+                "position": {
+                    "top": frame.top,
+                    "left": frame.left,
+                    "width": frame.width,
+                    "height": frame.height
+                },
+                "cid": cid_num
+            };
+            switch (component_type) {
+                case "input": {
+                    nativeInvoke("insertInput", args);
+                }
+                break;
+
+            case "textArea": {
+                nativeInvoke("insertTextArea", args);
+            }
+            break;
+
+            case "video": {
+                nativeInvoke("insertVideo", args);
+            }
+            break;
+            }
+        }
+    }
+
+    function nativeInvoke(api, args) {
+        console.log(api, args);
+        //TODO: judge platform iOS / Android
+        var platform = "ios";
+        if (platform === "ios") {
+            window.webkit.messageHandlers.handle.postMessage({
+                "api": api,
+                "args": args
+            });
+        }
+    }
+
+    setTimeout("insertNativeComponents()", 100);
+</script>
+
+</html>
