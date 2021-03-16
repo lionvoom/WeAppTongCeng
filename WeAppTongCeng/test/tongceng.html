@@ -32,25 +32,63 @@
             height: 500px;
             background-color: #00FFFF;
         }
+        .blur {
+            background-color: #000000AA;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1000;
+            position: fixed;
+        }
+        .blur {
+            background-color: #000000AA;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1000;
+            position: fixed;
+            display: none;
+        }
+        .blurControl {
+            font-size: 20px;
+            background-color: darkseagreen;
+            color: white;
+            left: 0;
+            top: 90%;
+            width: 100%;
+            height: 10%;
+            z-index: 1001;
+            position: fixed;
+        }
     </style>
 
 </head>
 
 
 <body>
-    <div class="container cid_1" data-component-type="input" style="width: 200px; height: 40px">
-        <div style="width: 101%; height: 101%">&nbsp;</div>
-    </div>
-    <div class="container cid_2" data-component-type="textArea" style="width: 200px; height: 80px">
-        <div style="width: 101%; height: 101%">&nbsp;</div>
-    </div>
-    <div class="container cid_3" data-component-type="video" style="width: 300px; height: 200px">
-        <div style="width: 101%; height: 101%">&nbsp;</div>
-    </div>
-    <div class="bottomBar" data-component-type="video" style="background-color: #CCCCCC; width: 100%; height: 500px;">more content</div>
+<div class="container cid_1" data-component-type="input" style="width: 200px; height: 40px">
+    <div style="width: 101%; height: 101%">&nbsp;</div>
+</div>
+<div class="container cid_2" data-component-type="textArea" style="width: 200px; height: 80px">
+    <div style="width: 101%; height: 101%">&nbsp;</div>
+</div>
+<div class="container cid_3" data-component-type="video" style="width: 300px; height: 200px">
+    <div style="width: 101%; height: 101%">&nbsp;</div>
+</div>
+<div class="bottomBar" data-component-type="video" style="background-color: #CCCCCC; width: 100%; height: 500px;">more content</div>
+<div class="blur">
+</div>
+<button class="blurControl" type="button" onclick="blurControl()">蒙层控制</button>
 </body>
 
 <script>
+    function blurControl() {
+        var blur = document.getElementsByClassName("blur")[0];
+        blur.style.display = blur.style.display !== "block" ? "block" : "none";
+    }
+
     function insertNativeComponents() {
         var containers = document.getElementsByClassName("container");
         console.log(containers);
@@ -71,20 +109,23 @@
                 "cid": cid_num
             };
             switch (component_type) {
-                case "input": {
+                case "input":
+                {
                     nativeInvoke("insertInput", args);
                 }
-                break;
+                    break;
 
-            case "textArea": {
-                nativeInvoke("insertTextArea", args);
-            }
-            break;
+                case "textArea":
+                {
+                    nativeInvoke("insertTextArea", args);
+                }
+                    break;
 
-            case "video": {
-                nativeInvoke("insertVideo", args);
-            }
-            break;
+                case "video":
+                {
+                    nativeInvoke("insertVideo", args);
+                }
+                    break;
             }
         }
     }
