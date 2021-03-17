@@ -53,11 +53,12 @@
         }
         .blurControl {
             font-size: 20px;
-            background-color: forestgreen;
+            background-color: darkseagreen;
             color: white;
-            top: 92%;
-            height: 8%;
+            left: 0;
+            top: 90%;
             width: 100%;
+            height: 10%;
             z-index: 1001;
             position: fixed;
         }
@@ -77,18 +78,15 @@
     <div style="width: 101%; height: 101%">&nbsp;</div>
 </div>
 <div class="bottomBar" data-component-type="video" style="background-color: #CCCCCC; width: 100%; height: 500px;">more content</div>
-<div class="blur"></div>
-<button class="blurControl" type="button" onclick="blurControl()">显示蒙层</button>
+<div class="blur">
+</div>
+<button class="blurControl" type="button" onclick="blurControl()">蒙层控制</button>
 </body>
 
 <script>
     function blurControl() {
         var blur = document.getElementsByClassName("blur")[0];
-        var isHidden = blur.style.display !== "block";
-        blur.style.display = isHidden ? "block" : "none";
-
-        var blurControl = document.getElementsByClassName("blurControl")[0];
-        blurControl.innerHTML = isHidden ? "关闭蒙层" : "显示蒙层";
+        blur.style.display = blur.style.display !== "block" ? "block" : "none";
     }
 
     function insertNativeComponents() {
