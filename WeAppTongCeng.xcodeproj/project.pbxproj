@@ -172,6 +172,8 @@
 			children = (
 				090C2D3125FA108100330C86 /* LVTongCengWebView.h */,
 				090C2D3225FA108100330C86 /* LVTongCengWebView.m */,
+				090C2D6E25FB1E0400330C86 /* LVContainerView.h */,
+				090C2D6F25FB1E0400330C86 /* LVContainerView.m */,
 				094273E22600967600B26EB8 /* LVWebViewBridge.h */,
 				094273E32600967600B26EB8 /* LVWebViewBridge.m */,
 				0942740026009B9600B26EB8 /* LVApiHandleDelegate-Protocol.h */,
@@ -182,8 +184,6 @@
 				0942740426009FCD00B26EB8 /* LVTongCengWebDelegate-Protocol.h */,
 				0936DCC325FF32AD007A65EB /* LVWeakProxy.h */,
 				0936DCC425FF32AD007A65EB /* LVWeakProxy.m */,
-				090C2D6E25FB1E0400330C86 /* LVContainerView.h */,
-				090C2D6F25FB1E0400330C86 /* LVContainerView.m */,
 				090C2D3825FA141700330C86 /* YYWAWebView.cpp */,
 			);
 			path = LVTongCeng;
