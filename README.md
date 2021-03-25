@@ -170,7 +170,9 @@
 1. 我们可以看到原生组件`UITextField`、`UITextView`响应聚焦输入，`UIButton`可以点击变颜色，实现了正常交互；
 2. H5蒙层可以遮挡住`原生组件`，解决了`WKWebView`内嵌原生组件的层级限制问题，完美体现了`同层`的含义。
 
-![图片](https://uploader.shimo.im/f/MxbV46jKTgwrQu7o.gif?fileGuid=pv833try8pHkTvKG)
+<div>
+    <img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4cc02761c67f40ae931d6cdc587c7140~tplv-k3u1fbpfcp-watermark.image" style="width: 300px"/>
+</div>
 
 **Talk is cheap. Show me the code.**  
 DEMO地址: [https://github.com/lionvoom/WeAppTongCeng](https://github.com/lionvoom/WeAppTongCeng)
