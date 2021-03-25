@@ -173,4 +173,4 @@
 ![图片](https://uploader.shimo.im/f/MxbV46jKTgwrQu7o.gif?fileGuid=pv833try8pHkTvKG)
 
 **Talk is cheap. Show me the code.**  
-DEMO地址: [https://github.com/lionvoom/WeAppTongCeng](
+DEMO地址: [https://github.com/lionvoom/WeAppTongCeng](https://github.com/lionvoom/WeAppTongCeng)
