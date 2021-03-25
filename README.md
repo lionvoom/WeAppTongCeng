@@ -1,36 +1,135 @@
-<section id="nice" data-tool="mdnice编辑器" data-website="https://www.mdnice.com" style="font-size: 16px; color: black; padding: 0 10px; line-height: 1.6; word-spacing: 0px; letter-spacing: 0px; word-break: break-word; word-wrap: break-word; text-align: left; font-family: Optima-Regular, Optima, PingFangSC-light, PingFangTC-light, 'PingFang SC', Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;"><p data-tool="mdnice编辑器" style="font-size: 16px; padding-top: 8px; padding-bottom: 8px; margin: 0; line-height: 26px; color: black;">​    ​    ​    ​    自微信小程序火了后, 个大头部厂商也纷纷效仿, 给自己的客户端提供了小程序框架支持. 然而小程序框架为了提升小程序页面的极致用户体验, 做了同层渲染.</p>
-<p data-tool="mdnice编辑器" style="font-size: 16px; padding-top: 8px; padding-bottom: 8px; margin: 0; line-height: 26px; color: black;"><strong style="font-weight: bold; color: black;">抛砖引玉:</strong></p>
-<p data-tool="mdnice编辑器" style="font-size: 16px; padding-top: 8px; padding-bottom: 8px; margin: 0; line-height: 26px; color: black;"><strong style="font-weight: bold; color: black;">我们今天的目标就是: 从0到1实现iOS端<code style="font-size: 14px; word-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin: 0 2px; background-color: rgba(27,31,35,.05); font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(239, 112, 96);">WKWebView</code>同层渲染, 文章末尾有DEMO演示, 也有源码地址.</strong></p>
-<figure data-tool="mdnice编辑器" style="margin: 0; margin-top: 10px; margin-bottom: 10px; display: flex; flex-direction: column; justify-content: center; align-items: center;"><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/cd50590ab184460883662eb935017b1d~tplv-k3u1fbpfcp-watermark.image" alt="weapp.png" style="display: block; margin: 0 auto; max-width: 100%;"><figcaption style="margin-top: 5px; text-align: center; color: #888; font-size: 14px;">weapp.png</figcaption></figure>
-<h1 data-tool="mdnice编辑器" style="margin-top: 30px; margin-bottom: 15px; padding: 0px; font-weight: bold; color: black; font-size: 24px;"><span class="prefix" style="display: none;"></span><span class="content">同层渲染原理</span><span class="suffix"></span></h1>
-<p data-tool="mdnice编辑器" style="font-size: 16px; padding-top: 8px; padding-bottom: 8px; margin: 0; line-height: 26px; color: black;">「同层渲染」就是把原生组件绘制在 <code style="font-size: 14px; word-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin: 0 2px; background-color: rgba(27,31,35,.05); font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(239, 112, 96);">WebView</code> 所渲染的页面中，与其他 <code style="font-size: 14px; word-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin: 0 2px; background-color: rgba(27,31,35,.05); font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(239, 112, 96);">HTML</code> 控件在同一层级，效果如下图所示:
-<img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f137ab9d5bd84220a1ffdef641912882~tplv-k3u1fbpfcp-watermark.image" alt="同层渲染原理.png" style="display: block; margin: 0 auto; max-width: 100%;"></p>
-<p data-tool="mdnice编辑器" style="font-size: 16px; padding-top: 8px; padding-bottom: 8px; margin: 0; line-height: 26px; color: black;">这里我给大家找到三篇比较官方的文章, 建议跳过看总结:</p>
-<ul data-tool="mdnice编辑器" style="margin-top: 8px; margin-bottom: 8px; padding-left: 25px; color: black; list-style-type: disc;">
-<li><section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; text-align: left; color: rgb(1,1,1); font-weight: 500;">腾讯 <a href="https://developers.weixin.qq.com/community/develop/article/doc/000c4e433707c072c1793e56f5c813?page=1" style="text-decoration: none; word-wrap: break-word; font-weight: bold; color: rgb(239, 112, 96); border-bottom: 1px solid rgb(239, 112, 96);">微信小程序同层渲染原理剖析</a></section></li><li><section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; text-align: left; color: rgb(1,1,1); font-weight: 500;">百度<a href="https://blog.csdn.net/Smartprogram/article/details/108124407" style="text-decoration: none; word-wrap: break-word; font-weight: bold; color: rgb(239, 112, 96); border-bottom: 1px solid rgb(239, 112, 96);">【走进小程序原理】揭秘组件同层渲染</a> <strong style="font-weight: bold; color: black;">(推荐)</strong></section></li><li><section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; text-align: left; color: rgb(1,1,1); font-weight: 500;">阿里 <a href="https://mp.weixin.qq.com/s/jgsG-XrAKV6AHSrUCRhKtQ" style="text-decoration: none; word-wrap: break-word; font-weight: bold; color: rgb(239, 112, 96); border-bottom: 1px solid rgb(239, 112, 96);">亿级用户高稳定性视频播放器养成计划|618淘系前端技术分享</a></section></li></ul>
-<blockquote class="multiquote-1" data-tool="mdnice编辑器" style="border: none; display: block; font-size: 0.9em; overflow: auto; overflow-scrolling: touch; border-left: 3px solid rgba(0, 0, 0, 0.4); color: #6a737d; padding-top: 10px; padding-bottom: 10px; padding-left: 20px; padding-right: 10px; margin-bottom: 20px; margin-top: 20px; border-left-color: rgb(239, 112, 96); background: #fff9f9;">
-<p style="font-size: 16px; padding-top: 8px; padding-bottom: 8px; margin: 0px; color: black; line-height: 26px;">总结</p>
-<p style="font-size: 16px; padding-top: 8px; padding-bottom: 8px; margin: 0px; color: black; line-height: 26px;">这些文章只阐述了基本实现思路, 并没有教你怎么实现, 然并卵.</p>
-<p style="font-size: 16px; padding-top: 8px; padding-bottom: 8px; margin: 0px; color: black; line-height: 26px;">看完之后各大技术论坛的“同层渲染原理分析”的你, 还是实现不了.
-<strong style="font-weight: bold; color: black;">下面我们一起来实现.</strong></p>
-</blockquote>
-<h1 data-tool="mdnice编辑器" style="margin-top: 30px; margin-bottom: 15px; padding: 0px; font-weight: bold; color: black; font-size: 24px;"><span class="prefix" style="display: none;"></span><span class="content">实现同层渲染</span><span class="suffix"></span></h1>
-<h2 data-tool="mdnice编辑器" style="margin-top: 30px; margin-bottom: 15px; padding: 0px; font-weight: bold; color: black; border-bottom: 2px solid rgb(239, 112, 96); font-size: 1.3em;"><span class="prefix" style="display: none;"></span><span class="content" style="display: inline-block; font-weight: bold; background: rgb(239, 112, 96); color: #ffffff; padding: 3px 10px 1px; border-top-right-radius: 3px; border-top-left-radius: 3px; margin-right: 3px;">1. 我们在前端H5页面上创建一个需要生成原生组件的<code>DOM</code>节点.</span><span class="suffix"></span><span style="display: inline-block; vertical-align: bottom; border-bottom: 36px solid #efebe9; border-right: 20px solid transparent;"> </span></h2>
-<pre class="custom" data-tool="mdnice编辑器" style="margin-top: 10px; margin-bottom: 10px; border-radius: 5px; box-shadow: rgba(0, 0, 0, 0.55) 0px 2px 10px;"><span style="display: block; background: url(https://files.mdnice.com/point.png); height: 30px; width: 100%; background-size: 40px; background-repeat: no-repeat; background-color: #282c34; margin-bottom: -7px; border-radius: 5px; background-position: 10px 10px;"></span><code class="hljs" style="overflow-x: auto; padding: 16px; color: #abb2bf; display: -webkit-box; font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; font-size: 12px; -webkit-overflow-scrolling: touch; padding-top: 15px; background: #282c34; border-radius: 5px;"><span class="hljs-tag" style="line-height: 26px;">&lt;<span class="hljs-name" style="color: #e06c75; line-height: 26px;">div</span>&nbsp;<span class="hljs-attr" style="color: #d19a66; line-height: 26px;">class</span>=<span class="hljs-string" style="color: #98c379; line-height: 26px;">"container&nbsp;cid_1"</span>&nbsp;<span class="hljs-attr" style="color: #d19a66; line-height: 26px;">data-component-type</span>=<span class="hljs-string" style="color: #98c379; line-height: 26px;">"input"</span>&nbsp;<span class="hljs-attr" style="color: #d19a66; line-height: 26px;">style</span>=<span class="hljs-string" style="color: #98c379; line-height: 26px;">"width:&nbsp;200px;&nbsp;height:&nbsp;40px"</span>&gt;</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-tag" style="line-height: 26px;">&lt;<span class="hljs-name" style="color: #e06c75; line-height: 26px;">div</span>&nbsp;<span class="hljs-attr" style="color: #d19a66; line-height: 26px;">style</span>=<span class="hljs-string" style="color: #98c379; line-height: 26px;">"width:&nbsp;101%;&nbsp;height:&nbsp;101%"</span>&gt;</span><span class="hljs-symbol" style="color: #61aeee; line-height: 26px;">&amp;nbsp;</span><span class="hljs-tag" style="line-height: 26px;">&lt;/<span class="hljs-name" style="color: #e06c75; line-height: 26px;">div</span>&gt;</span><br><span class="hljs-tag" style="line-height: 26px;">&lt;/<span class="hljs-name" style="color: #e06c75; line-height: 26px;">div</span>&gt;</span><br><br><span class="hljs-tag" style="line-height: 26px;">&lt;<span class="hljs-name" style="color: #e06c75; line-height: 26px;">style</span>&gt;</span><span class="css" style="line-height: 26px;"><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-selector-class" style="color: #d19a66; line-height: 26px;">.container</span>&nbsp;{&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-comment" style="color: #5c6370; font-style: italic; line-height: 26px;">/*&nbsp;insert&nbsp;WKChildView&nbsp;in&nbsp;WKWebView&nbsp;*/</span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-attribute" style="color: #98c379; line-height: 26px;">overflow</span>:&nbsp;scroll;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-attribute" style="color: #98c379; line-height: 26px;">-webkit-overflow-scrolling</span>:&nbsp;touch;<br>&nbsp;&nbsp;&nbsp;&nbsp;}<br></span><span class="hljs-tag" style="line-height: 26px;">&lt;/<span class="hljs-name" style="color: #e06c75; line-height: 26px;">style</span>&gt;</span><br></code></pre>
-<h2 data-tool="mdnice编辑器" style="margin-top: 30px; margin-bottom: 15px; padding: 0px; font-weight: bold; color: black; border-bottom: 2px solid rgb(239, 112, 96); font-size: 1.3em;"><span class="prefix" style="display: none;"></span><span class="content" style="display: inline-block; font-weight: bold; background: rgb(239, 112, 96); color: #ffffff; padding: 3px 10px 1px; border-top-right-radius: 3px; border-top-left-radius: 3px; margin-right: 3px;">2. 前端会把原生组件类型如<code>cid</code>、<code>position</code>等信息通过<code>window.webkit.messageHandlers.handle.postMessage</code>发送给iOS端.</span><span class="suffix"></span><span style="display: inline-block; vertical-align: bottom; border-bottom: 36px solid #efebe9; border-right: 20px solid transparent;"> </span></h2>
-<pre class="custom" data-tool="mdnice编辑器" style="margin-top: 10px; margin-bottom: 10px; border-radius: 5px; box-shadow: rgba(0, 0, 0, 0.55) 0px 2px 10px;"><span style="display: block; background: url(https://files.mdnice.com/point.png); height: 30px; width: 100%; background-size: 40px; background-repeat: no-repeat; background-color: #282c34; margin-bottom: -7px; border-radius: 5px; background-position: 10px 10px;"></span><code class="hljs" style="overflow-x: auto; padding: 16px; color: #abb2bf; display: -webkit-box; font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; font-size: 12px; -webkit-overflow-scrolling: touch; padding-top: 15px; background: #282c34; border-radius: 5px;">&lt;script&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-comment" style="color: #5c6370; font-style: italic; line-height: 26px;">//&nbsp;管理同层渲染组件,&nbsp;通知原生创建同层渲染组件</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-function" style="line-height: 26px;"><span class="hljs-keyword" style="color: #c678dd; line-height: 26px;">function</span>&nbsp;<span class="hljs-title" style="color: #61aeee; line-height: 26px;">insertNativeComponents</span>(<span class="hljs-params" style="line-height: 26px;"></span>)&nbsp;</span>{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #c678dd; line-height: 26px;">var</span>&nbsp;containers&nbsp;=&nbsp;<span class="hljs-built_in" style="color: #e6c07b; line-height: 26px;">document</span>.getElementsByClassName(<span class="hljs-string" style="color: #98c379; line-height: 26px;">"container"</span>);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-built_in" style="color: #e6c07b; line-height: 26px;">console</span>.log(containers);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #c678dd; line-height: 26px;">for</span>&nbsp;(<span class="hljs-keyword" style="color: #c678dd; line-height: 26px;">var</span>&nbsp;i&nbsp;=&nbsp;<span class="hljs-number" style="color: #d19a66; line-height: 26px;">0</span>;&nbsp;i&nbsp;&lt;&nbsp;containers.length;&nbsp;i++)&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #c678dd; line-height: 26px;">var</span>&nbsp;ct&nbsp;=&nbsp;containers[i];<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #c678dd; line-height: 26px;">var</span>&nbsp;component_type&nbsp;=&nbsp;ct.getAttribute(<span class="hljs-string" style="color: #98c379; line-height: 26px;">"data-component-type"</span>);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #c678dd; line-height: 26px;">if</span>&nbsp;(!component_type)&nbsp;<span class="hljs-keyword" style="color: #c678dd; line-height: 26px;">continue</span>;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #c678dd; line-height: 26px;">var</span>&nbsp;cid&nbsp;=&nbsp;ct.getAttribute(<span class="hljs-string" style="color: #98c379; line-height: 26px;">"class"</span>).split(<span class="hljs-string" style="color: #98c379; line-height: 26px;">"&nbsp;"</span>)[<span class="hljs-number" style="color: #d19a66; line-height: 26px;">1</span>];<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #c678dd; line-height: 26px;">var</span>&nbsp;cid_num&nbsp;=&nbsp;cid.slice(<span class="hljs-string" style="color: #98c379; line-height: 26px;">"cid_"</span>.length);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #c678dd; line-height: 26px;">var</span>&nbsp;frame&nbsp;=&nbsp;ct.getBoundingClientRect();<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #c678dd; line-height: 26px;">var</span>&nbsp;args&nbsp;=&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-string" style="color: #98c379; line-height: 26px;">"position"</span>:&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-string" style="color: #98c379; line-height: 26px;">"top"</span>:&nbsp;frame.top,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-string" style="color: #98c379; line-height: 26px;">"left"</span>:&nbsp;frame.left,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-string" style="color: #98c379; line-height: 26px;">"width"</span>:&nbsp;frame.width,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-string" style="color: #98c379; line-height: 26px;">"height"</span>:&nbsp;frame.height<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;},<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-string" style="color: #98c379; line-height: 26px;">"cid"</span>:&nbsp;cid_num<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;};<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #c678dd; line-height: 26px;">switch</span>&nbsp;(component_type)&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #c678dd; line-height: 26px;">case</span>&nbsp;<span class="hljs-string" style="color: #98c379; line-height: 26px;">"input"</span>:&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nativeInvoke(<span class="hljs-string" style="color: #98c379; line-height: 26px;">"insertInput"</span>,&nbsp;args);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #c678dd; line-height: 26px;">break</span>;<br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #c678dd; line-height: 26px;">case</span>&nbsp;<span class="hljs-string" style="color: #98c379; line-height: 26px;">"textArea"</span>:&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nativeInvoke(<span class="hljs-string" style="color: #98c379; line-height: 26px;">"insertTextArea"</span>,&nbsp;args);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #c678dd; line-height: 26px;">break</span>;<br>&nbsp;&nbsp;&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #c678dd; line-height: 26px;">case</span>&nbsp;<span class="hljs-string" style="color: #98c379; line-height: 26px;">"video"</span>:&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nativeInvoke(<span class="hljs-string" style="color: #98c379; line-height: 26px;">"insertVideo"</span>,&nbsp;args);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #c678dd; line-height: 26px;">break</span>;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>&nbsp;&nbsp;&nbsp;&nbsp;}<br><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-function" style="line-height: 26px;"><span class="hljs-keyword" style="color: #c678dd; line-height: 26px;">function</span>&nbsp;<span class="hljs-title" style="color: #61aeee; line-height: 26px;">nativeInvoke</span>(<span class="hljs-params" style="line-height: 26px;">api,&nbsp;args</span>)&nbsp;</span>{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-built_in" style="color: #e6c07b; line-height: 26px;">console</span>.log(api,&nbsp;args);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-comment" style="color: #5c6370; font-style: italic; line-height: 26px;">//<span class="hljs-doctag" style="color: #c678dd; line-height: 26px;">TODO:</span>&nbsp;judge&nbsp;platform&nbsp;iOS&nbsp;/&nbsp;Android</span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #c678dd; line-height: 26px;">var</span>&nbsp;platform&nbsp;=&nbsp;<span class="hljs-string" style="color: #98c379; line-height: 26px;">"ios"</span>;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #c678dd; line-height: 26px;">if</span>&nbsp;(platform&nbsp;===&nbsp;<span class="hljs-string" style="color: #98c379; line-height: 26px;">"ios"</span>)&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-built_in" style="color: #e6c07b; line-height: 26px;">window</span>.webkit.messageHandlers.handle.postMessage({<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-string" style="color: #98c379; line-height: 26px;">"api"</span>:&nbsp;api,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-string" style="color: #98c379; line-height: 26px;">"args"</span>:&nbsp;args<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;});<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;setTimeout(<span class="hljs-string" style="color: #98c379; line-height: 26px;">"insertNativeComponents()"</span>,&nbsp;<span class="hljs-number" style="color: #d19a66; line-height: 26px;">100</span>);<br>&lt;<span class="hljs-regexp" style="color: #98c379; line-height: 26px;">/script&gt;<br></span></code></pre>
-<h2 data-tool="mdnice编辑器" style="margin-top: 30px; margin-bottom: 15px; padding: 0px; font-weight: bold; color: black; border-bottom: 2px solid rgb(239, 112, 96); font-size: 1.3em;"><span class="prefix" style="display: none;"></span><span class="content" style="display: inline-block; font-weight: bold; background: rgb(239, 112, 96); color: #ffffff; padding: 3px 10px 1px; border-top-right-radius: 3px; border-top-left-radius: 3px; margin-right: 3px;">3. iOS端WKWebView消息代理接收到前端发来的消息</span><span class="suffix"></span><span style="display: inline-block; vertical-align: bottom; border-bottom: 36px solid #efebe9; border-right: 20px solid transparent;"> </span></h2>
-<pre class="custom" data-tool="mdnice编辑器" style="margin-top: 10px; margin-bottom: 10px; border-radius: 5px; box-shadow: rgba(0, 0, 0, 0.55) 0px 2px 10px;"><span style="display: block; background: url(https://files.mdnice.com/point.png); height: 30px; width: 100%; background-size: 40px; background-repeat: no-repeat; background-color: #282c34; margin-bottom: -7px; border-radius: 5px; background-position: 10px 10px;"></span><code class="hljs" style="overflow-x: auto; padding: 16px; color: #abb2bf; display: -webkit-box; font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; font-size: 12px; -webkit-overflow-scrolling: touch; padding-top: 15px; background: #282c34; border-radius: 5px;">- (void)userContentController:(WKUserContentController *)userContentController didReceiveScriptMessage:(WKScriptMessage *)message {
+> 自微信小程序火了后, 个大头部厂商也纷纷效仿, 给自己的客户端提供了小程序框架支持. 然而小程序框架为了提升小程序页面的极致用户体验, 做了**同层渲染**.
+
+​        **抛砖引玉:**
+
+​        **我们今天的目标就是: 从0到1实现iOS端`WKWebView`同层渲染, 文章末尾有DEMO演示, 也有源码地址.**
+
+![weapp.png](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/cd50590ab184460883662eb935017b1d~tplv-k3u1fbpfcp-watermark.image)
+
+
+
+
+
+# 同层渲染原理 
+
+「同层渲染」就是把原生组件绘制在 `WebView` 所渲染的页面中，与其他 `HTML` 控件在同一层级，效果如下图所示:
+![同层渲染原理.png](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f137ab9d5bd84220a1ffdef641912882~tplv-k3u1fbpfcp-watermark.image)
+
+这里我给大家找到三篇比较官方的文章, 建议跳过看总结:
+
+- 腾讯 [微信小程序同层渲染原理剖析](https://developers.weixin.qq.com/community/develop/article/doc/000c4e433707c072c1793e56f5c813?page=1)
+- 百度[【走进小程序原理】揭秘组件同层渲染](https://blog.csdn.net/Smartprogram/article/details/108124407) **(推荐)**
+- 阿里 [亿级用户高稳定性视频播放器养成计划|618淘系前端技术分享](https://mp.weixin.qq.com/s/jgsG-XrAKV6AHSrUCRhKtQ)
+
+
+> 总结
+>
+> 这些文章只阐述了基本实现思路, 并没有教你怎么实现, 然并卵. 
+>
+> 看完之后各大技术论坛的“同层渲染原理分析”的你, 还是实现不了.
+> **下面我们一起来实现一个.**
+
+
+
+# 实现同层渲染
+
+## 1. 我们在前端H5页面上创建一个需要生成原生组件的`DOM`节点.
+
+```html
+<div class="container cid_1" data-component-type="input" style="width: 200px; height: 40px">
+    <div style="width: 101%; height: 101%">&nbsp;</div>
+</div>
+
+<style>
+    .container { 
+        /* insert WKChildView in WKWebView */
+        overflow: scroll;
+        -webkit-overflow-scrolling: touch;
+    }
+</style>
+```
+
+## 2. 前端会把原生组件类型如`cid`、`position`等信息通过`window.webkit.messageHandlers.handle.postMessage`发送给iOS端.
+
+```javascript
+<script>
+    // 管理同层渲染组件, 通知原生创建同层渲染组件
+    function insertNativeComponents() {
+        var containers = document.getElementsByClassName("container");
+        console.log(containers);
+        for (var i = 0; i < containers.length; i++) {
+            var ct = containers[i];
+            var component_type = ct.getAttribute("data-component-type");
+            if (!component_type) continue;
+            var cid = ct.getAttribute("class").split(" ")[1];
+            var cid_num = cid.slice("cid_".length);
+            var frame = ct.getBoundingClientRect();
+            var args = {
+                "position": {
+                    "top": frame.top,
+                    "left": frame.left,
+                    "width": frame.width,
+                    "height": frame.height
+                },
+                "cid": cid_num
+            };
+            switch (component_type) {
+                case "input": {
+                    nativeInvoke("insertInput", args);
+                }
+                break;
+
+                case "textArea": {
+                    nativeInvoke("insertTextArea", args);
+                }
+                break;
+    
+                case "video": {
+                    nativeInvoke("insertVideo", args);
+                }
+                break;
+            }
+        }
+    }
+
+    function nativeInvoke(api, args) {
+        console.log(api, args);
+        //TODO: judge platform iOS / Android
+        var platform = "ios";
+        if (platform === "ios") {
+            window.webkit.messageHandlers.handle.postMessage({
+                "api": api,
+                "args": args
+            });
+        }
+    }   
+    
+    setTimeout("insertNativeComponents()", 100);
+</script>
+```
+
+## 3. iOS端WKWebView消息代理接收到前端发来的消息
+
+```objective-c
+- (void)userContentController:(WKUserContentController *)userContentController didReceiveScriptMessage:(WKScriptMessage *)message {
         // 收到前端的消息
         // message.name: handle
     // message.body: {"api":"insertInput","args":{"cid":"1","position":{"top":30,"width":200,"left":87.5,"height":40}}}
 }
-</code></pre>
-<h2 data-tool="mdnice编辑器" style="margin-top: 30px; margin-bottom: 15px; padding: 0px; font-weight: bold; color: black; border-bottom: 2px solid rgb(239, 112, 96); font-size: 1.3em;"><span class="prefix" style="display: none;"></span><span class="content" style="display: inline-block; font-weight: bold; background: rgb(239, 112, 96); color: #ffffff; padding: 3px 10px 1px; border-top-right-radius: 3px; border-top-left-radius: 3px; margin-right: 3px;">4. iOS端可以通过消息中的<code>cid</code>匹配查找相应<code>WKChildScrollView</code>，并将原生组件挂载到该节点上作为其子View.</span><span class="suffix"></span><span style="display: inline-block; vertical-align: bottom; border-bottom: 36px solid #efebe9; border-right: 20px solid transparent;"> </span></h2>
-<figure data-tool="mdnice编辑器" style="margin: 0; margin-top: 10px; margin-bottom: 10px; display: flex; flex-direction: column; justify-content: center; align-items: center;"><img src="https://uploader.shimo.im/f/R0pscfsRIAxUPRcy.png!thumbnail?fileGuid=pv833try8pHkTvKG" alt="图片" style="display: block; margin: 0 auto; max-width: 100%;"><figcaption style="margin-top: 5px; text-align: center; color: #888; font-size: 14px;">图片</figcaption></figure>
-<h2 data-tool="mdnice编辑器" style="margin-top: 30px; margin-bottom: 15px; padding: 0px; font-weight: bold; color: black; border-bottom: 2px solid rgb(239, 112, 96); font-size: 1.3em;"><span class="prefix" style="display: none;"></span><span class="content" style="display: inline-block; font-weight: bold; background: rgb(239, 112, 96); color: #ffffff; padding: 3px 10px 1px; border-top-right-radius: 3px; border-top-left-radius: 3px; margin-right: 3px;">5. 最后我们发现WKWebView中插入的原生组件是无法响应交互事件的，需要特殊处理.</span><span class="suffix"></span><span style="display: inline-block; vertical-align: bottom; border-bottom: 36px solid #efebe9; border-right: 20px solid transparent;"> </span></h2>
-<p data-tool="mdnice编辑器" style="font-size: 16px; padding-top: 8px; padding-bottom: 8px; margin: 0; line-height: 26px; color: black;">这里我们需要处理两件事，一是屏蔽<code style="font-size: 14px; word-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin: 0 2px; background-color: rgba(27,31,35,.05); font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(239, 112, 96);">WKContentView</code>手势拦截事件响应链的传递，让事件可以传递到原生组件中，命令如下：</p>
-<pre class="custom" data-tool="mdnice编辑器" style="margin-top: 10px; margin-bottom: 10px; border-radius: 5px; box-shadow: rgba(0, 0, 0, 0.55) 0px 2px 10px;"><span style="display: block; background: url(https://files.mdnice.com/point.png); height: 30px; width: 100%; background-size: 40px; background-repeat: no-repeat; background-color: #282c34; margin-bottom: -7px; border-radius: 5px; background-position: 10px 10px;"></span><code class="hljs" style="overflow-x: auto; padding: 16px; color: #abb2bf; display: -webkit-box; font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; font-size: 12px; -webkit-overflow-scrolling: touch; padding-top: 15px; background: #282c34; border-radius: 5px;">@implementation LVTongCengWebView
+```
+
+## 4. iOS端可以通过消息中的`cid`匹配查找相应`WKChildScrollView`，并将原生组件挂载到该节点上作为其子View.
+
+![图片](https://uploader.shimo.im/f/R0pscfsRIAxUPRcy.png!thumbnail?fileGuid=pv833try8pHkTvKG)
+
+
+
+## 5. 最后我们发现WKWebView中插入的原生组件是无法响应交互事件的，需要特殊处理.
+
+这里我们需要处理两件事，一是屏蔽`WKContentView`手势拦截事件响应链的传递，让事件可以传递到原生组件中，命令如下：
+
+```objective-c
+@implementation LVTongCengWebView
 
 - (void)_handleWKContentGestrues {
     UIScrollView *webViewScrollView = self.scrollView;
@@ -47,9 +146,12 @@
 }
 
 @end
-</code></pre>
-<p data-tool="mdnice编辑器" style="font-size: 16px; padding-top: 8px; padding-bottom: 8px; margin: 0; line-height: 26px; color: black;">二是重写iOS端<code style="font-size: 14px; word-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin: 0 2px; background-color: rgba(27,31,35,.05); font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(239, 112, 96);">原生组件</code>容器<code style="font-size: 14px; word-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin: 0 2px; background-color: rgba(27,31,35,.05); font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(239, 112, 96);">LVContainerView</code>协议检测方法<code style="font-size: 14px; word-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin: 0 2px; background-color: rgba(27,31,35,.05); font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(239, 112, 96);">-conformsToProtocol:</code>，目的是绕过<code style="font-size: 14px; word-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin: 0 2px; background-color: rgba(27,31,35,.05); font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(239, 112, 96);">WKNativelyInteractible</code>协议检测，从而在点击WKWebView的时候，容器<code style="font-size: 14px; word-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin: 0 2px; background-color: rgba(27,31,35,.05); font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(239, 112, 96);">LVContainerView</code>及其子view（原生组件）可以正常进行事件响应。</p>
-<pre class="custom" data-tool="mdnice编辑器" style="margin-top: 10px; margin-bottom: 10px; border-radius: 5px; box-shadow: rgba(0, 0, 0, 0.55) 0px 2px 10px;"><span style="display: block; background: url(https://files.mdnice.com/point.png); height: 30px; width: 100%; background-size: 40px; background-repeat: no-repeat; background-color: #282c34; margin-bottom: -7px; border-radius: 5px; background-position: 10px 10px;"></span><code class="hljs" style="overflow-x: auto; padding: 16px; color: #abb2bf; display: -webkit-box; font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; font-size: 12px; -webkit-overflow-scrolling: touch; padding-top: 15px; background: #282c34; border-radius: 5px;">@implementation LVContainerView
+```
+
+二是重写iOS端`原生组件`容器`LVContainerView`协议检测方法`-conformsToProtocol:`，目的是绕过`WKNativelyInteractible`协议检测，从而在点击WKWebView的时候，容器`LVContainerView`及其子view（原生组件）可以正常进行事件响应。
+
+```objective-c
+@implementation LVContainerView
 
 - (BOOL)conformsToProtocol:(Protocol *)aProtocol {
     if (aProtocol == NSProtocolFromString(@"WKNativelyInteractible")) {
@@ -59,11 +161,16 @@
 }
 
 @end
-</code></pre>
-<p data-tool="mdnice编辑器" style="font-size: 16px; padding-top: 8px; padding-bottom: 8px; margin: 0; line-height: 26px; color: black;">到这里，经过前面这些步骤，我们就实现了iOS端<code style="font-size: 14px; word-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin: 0 2px; background-color: rgba(27,31,35,.05); font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(239, 112, 96);">WKWebView</code>的<code style="font-size: 14px; word-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin: 0 2px; background-color: rgba(27,31,35,.05); font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(239, 112, 96);">同层渲染</code>，下面让我们来看看实现效果：</p>
-<ol data-tool="mdnice编辑器" style="margin-top: 8px; margin-bottom: 8px; padding-left: 25px; color: black; list-style-type: decimal;">
-<li><section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; text-align: left; color: rgb(1,1,1); font-weight: 500;">我们可以看到原生组件<code style="font-size: 14px; word-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin: 0 2px; background-color: rgba(27,31,35,.05); font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(239, 112, 96);">UITextField</code>、<code style="font-size: 14px; word-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin: 0 2px; background-color: rgba(27,31,35,.05); font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(239, 112, 96);">UITextView</code>响应聚焦输入，<code style="font-size: 14px; word-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin: 0 2px; background-color: rgba(27,31,35,.05); font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(239, 112, 96);">UIButton</code>可以点击变颜色，实现了正常交互；</section></li><li><section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; text-align: left; color: rgb(1,1,1); font-weight: 500;">H5蒙层可以遮挡住<code style="font-size: 14px; word-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin: 0 2px; background-color: rgba(27,31,35,.05); font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(239, 112, 96);">原生组件</code>，解决了<code style="font-size: 14px; word-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin: 0 2px; background-color: rgba(27,31,35,.05); font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(239, 112, 96);">WKWebView</code>内嵌原生组件的层级限制问题，完美体现了<code style="font-size: 14px; word-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin: 0 2px; background-color: rgba(27,31,35,.05); font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(239, 112, 96);">同层</code>的含义。</section></li></ol>
-<figure data-tool="mdnice编辑器" style="margin: 0; margin-top: 10px; margin-bottom: 10px; display: flex; flex-direction: column; justify-content: center; align-items: center;"><img src="https://uploader.shimo.im/f/MxbV46jKTgwrQu7o.gif?fileGuid=pv833try8pHkTvKG" alt="图片" style="display: block; margin: 0 auto; max-width: 100%;"><figcaption style="margin-top: 5px; text-align: center; color: #888; font-size: 14px;">图片</figcaption></figure>
-<p data-tool="mdnice编辑器" style="font-size: 16px; padding-top: 8px; padding-bottom: 8px; margin: 0; line-height: 26px; color: black;"><strong style="font-weight: bold; color: black;">Talk is cheap. Show me the code.</strong><br>
-DEMO地址: <a href="https://github.com/lionvoom/WeAppTongCeng?fileGuid=pv833try8pHkTvKG" style="text-decoration: none; word-wrap: break-word; font-weight: bold; color: rgb(239, 112, 96); border-bottom: 1px solid rgb(239, 112, 96);">https://github.com/lionvoom/WeAppTongCeng</a></p>
-</section>
+```
+
+
+
+到这里，经过前面这些步骤，我们就实现了iOS端`WKWebView`的`同层渲染`，下面让我们来看看实现效果：
+
+1. 我们可以看到原生组件`UITextField`、`UITextView`响应聚焦输入，`UIButton`可以点击变颜色，实现了正常交互；
+2. H5蒙层可以遮挡住`原生组件`，解决了`WKWebView`内嵌原生组件的层级限制问题，完美体现了`同层`的含义。
+
+![图片](https://uploader.shimo.im/f/MxbV46jKTgwrQu7o.gif?fileGuid=pv833try8pHkTvKG)
+
+**Talk is cheap. Show me the code.**  
+DEMO地址: [https://github.com/lionvoom/WeAppTongCeng](
