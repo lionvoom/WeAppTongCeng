@@ -120,7 +120,7 @@
 
 ## 4. iOS端可以通过消息中的`cid`匹配查找相应`WKChildScrollView`，并将原生组件挂载到该节点上作为其子View.
 
-![图片](https://uploader.shimo.im/f/R0pscfsRIAxUPRcy.png!thumbnail?fileGuid=pv833try8pHkTvKG)
+![图片](https://note.youdao.com/yws/api/personal/file/WEB5d27628125737e47e5547909cf3f6c90?method=download&shareKey=bcf19a277ca029ac0169efcd1c4a32a2)
 
 
 
@@ -171,7 +171,7 @@
 2. H5蒙层可以遮挡住`原生组件`，解决了`WKWebView`内嵌原生组件的层级限制问题，完美体现了`同层`的含义。
 
 <div>
-    <img src="https://uploader.shimo.im/f/MxbV46jKTgwrQu7o.gif?fileGuid=pv833try8pHkTvKG" style="width: 300px"/>
+    <img src="https://note.youdao.com/yws/api/personal/file/WEB879018ffe384866e1d46431b6564e25c?method=download&shareKey=0715a0d76413c10dac2a50736ec4141f" style="width: 300px"/>
 </div>
 
 **Talk is cheap. Show me the code.**  
