@@ -43,17 +43,18 @@
     }
     
     // Plan A: LVContainerView conforms to protocol WKNativelyInteractible
+    
     // Plan B: WKChildScrollView -[hitTest:withEvent:]
-    if ([wkHitView isKindOfClass:NSClassFromString(@"WKChildScrollView")]) {
-        for (UIView *subview in [wkHitView.subviews reverseObjectEnumerator]) {
-            CGPoint convertedPoint = [subview convertPoint:point fromView:self];
-            UIView *hitTestView = [subview hitTest:convertedPoint withEvent:event];
-            if (hitTestView) {
-                wkHitView = hitTestView;
-                break;
-            }
-        }
-    }
+//    if ([wkHitView isKindOfClass:NSClassFromString(@"WKChildScrollView")]) {
+//        for (UIView *subview in [wkHitView.subviews reverseObjectEnumerator]) {
+//            CGPoint convertedPoint = [subview convertPoint:point fromView:self];
+//            UIView *hitTestView = [subview hitTest:convertedPoint withEvent:event];
+//            if (hitTestView) {
+//                wkHitView = hitTestView;
+//                break;
+//            }
+//        }
+//    }
     
     // NSLog(@"hitTest: %@", wkHitView);
     return wkHitView;

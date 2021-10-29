@@ -9,12 +9,12 @@
 
 @implementation LVContainerView
 
-//// LVContainerView conforms protocol WKNativelyInteractible
-//- (BOOL)conformsToProtocol:(Protocol *)aProtocol {
-//    if (aProtocol == NSProtocolFromString(@"WKNativelyInteractible")) {
-//        return YES;
-//    }
-//    return [super conformsToProtocol:aProtocol];
-//}
+// LVContainerView conforms protocol WKNativelyInteractible
+- (BOOL)conformsToProtocol:(Protocol *)aProtocol {
+    if (aProtocol == NSProtocolFromString(@"WKNativelyInteractible")) {
+        return YES;
+    }
+    return [super conformsToProtocol:aProtocol];
+}
 
 @end
