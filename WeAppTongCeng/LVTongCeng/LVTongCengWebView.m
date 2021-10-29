@@ -19,7 +19,13 @@
         UIView *_WKContentView = webViewScrollView.subviews.firstObject;
         if (![_WKContentView isKindOfClass:NSClassFromString(@"WKContentView")]) return;
         NSArray *gestrues = _WKContentView.gestureRecognizers;
+        Class clz = NSClassFromString(@"UITextTapRecognizer");
         for (UIGestureRecognizer *gesture in gestrues) {
+            // fix: 原生输入框聚焦时, 再次点击会失焦
+            if ([gesture isKindOfClass:clz]) {
+                gesture.enabled = NO;
+                continue;
+            }
             gesture.cancelsTouchesInView = NO;
             gesture.delaysTouchesBegan = NO;
             gesture.delaysTouchesEnded = NO;

@@ -30,7 +30,8 @@
 - (UIView *)dfsSearch:(UIView *)view containerId:(NSNumber *)containerId {
     //TODO: optimize
     NSString *str = [NSString stringWithFormat:@"class='container cid_%@'", containerId];
-    if ([view.description containsString:str]) {
+    Class clz = NSClassFromString(@"WKCompositingView");
+    if ([view isKindOfClass:clz] && [[[view layer] name] hasSuffix:str]) {
         UIView *_WKChildScrollView = view.subviews.firstObject;
         if (![_WKChildScrollView isKindOfClass:NSClassFromString(@"WKChildScrollView")]) return nil;
         for (UIGestureRecognizer *ges in _WKChildScrollView.gestureRecognizers) {
@@ -48,13 +49,16 @@
 - (void)insertInput:(LVContainerView *)containerView {
     UITextField *textField = [[UITextField alloc] initWithFrame:containerView.bounds];
     textField.backgroundColor = UIColor.lightGrayColor;
-    textField.placeholder = @"请输入";
+    textField.font = [UIFont systemFontOfSize:20];
+    textField.text = @"微信小程序同层渲染";
     [containerView addSubview:textField];
 }
 
 - (void)insertTextArea:(LVContainerView *)containerView {
     UITextView *textView = [[UITextView alloc] initWithFrame:containerView.bounds];
     textView.backgroundColor = UIColor.brownColor;
+    textView.font = [UIFont systemFontOfSize:30];
+    textView.text = @"微信小程序同层渲染效果实现";
     [containerView addSubview:textView];
 }
 
